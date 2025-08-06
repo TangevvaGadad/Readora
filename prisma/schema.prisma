@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")  // Neon DB URL
+}
+
+model Book {
+  id        String   @id @default(uuid())
+  title     String
+  author    String
+  pdfUrl    String
+  coverUrl  String   // <-- New field for cover image
+  createdAt DateTime @default(now())
+}
+
