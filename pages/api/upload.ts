@@ -1,7 +1,6 @@
 import { IncomingForm } from 'formidable';
 import { prisma } from '@/lib/prisma';
-import fs from 'fs';
-import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
 
 export const config = {
   api: {
@@ -9,16 +8,19 @@ export const config = {
   },
 };
 
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const form = new IncomingForm({
-    uploadDir: './public/tmp',
-    keepExtensions: true,
-    multiples: true,
-  });
+  const form = new IncomingForm({ keepExtensions: true, multiples: true });
 
-  // Wrap form.parse in a Promise
+  // Parse form into fields/files
   const parseForm = () =>
     new Promise<{ fields: any; files: any }>((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
@@ -30,11 +32,7 @@ export default async function handler(req: any, res: any) {
   try {
     const { fields, files } = await parseForm();
 
-    console.log('Parsed fields:', fields);
-    console.log('Parsed files:', files);
-
     const { title, author } = fields;
-
     const pdfFile = Array.isArray(files.pdf) ? files.pdf[0] : files.pdf;
     const coverFile = Array.isArray(files.cover) ? files.cover[0] : files.cover;
 
@@ -42,26 +40,24 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({ message: 'Missing fields or files' });
     }
 
-    const booksDir = path.join(process.cwd(), 'public/books');
-    const coversDir = path.join(process.cwd(), 'public/covers');
-    fs.mkdirSync(booksDir, { recursive: true });
-    fs.mkdirSync(coversDir, { recursive: true });
+    // Upload PDF to Cloudinary
+    const pdfUpload = await cloudinary.uploader.upload(pdfFile.filepath, {
+      resource_type: 'raw', // for non-image files
+      folder: 'books/pdf',
+    });
 
-    const pdfPath = path.join(booksDir, pdfFile.newFilename);
-    const coverPath = path.join(coversDir, coverFile.newFilename);
+    // Upload cover image to Cloudinary
+    const coverUpload = await cloudinary.uploader.upload(coverFile.filepath, {
+      folder: 'books/covers',
+    });
 
-    fs.renameSync(pdfFile.filepath, pdfPath);
-    fs.renameSync(coverFile.filepath, coverPath);
-
-    const pdfUrl = `/books/${pdfFile.newFilename}`;
-    const coverUrl = `/covers/${coverFile.newFilename}`;
-
+    // Save file URLs in database
     await prisma.book.create({
       data: {
         title: title.toString(),
         author: author.toString(),
-        pdfUrl,
-        coverUrl,
+        pdfUrl: pdfUpload.secure_url,
+        coverUrl: coverUpload.secure_url,
       },
     });
 
