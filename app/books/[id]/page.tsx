@@ -1,17 +1,25 @@
-interface BookPageProps {
-  params: { id: string }
-}
+import { prisma } from '@/lib/prisma'
 
-export default async function BookPage({ params }: BookPageProps) {
-  const { id } = params;
+export default async function BookPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books/${id}`);
-  const book = await res.json();
+  const book = await prisma.book.findUnique({
+    where: { id },
+    select: { id: true, title: true, author: true },
+  })
+
+  if (!book) {
+    return (
+      <div>
+        <h1>Book not found</h1>
+      </div>
+    )
+  }
 
   return (
     <div>
       <h1>{book.title}</h1>
       <p>{book.author}</p>
     </div>
-  );
+  )
 }
