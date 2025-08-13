@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 
+export const runtime = 'nodejs'
+
 export default async function BookPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
 
