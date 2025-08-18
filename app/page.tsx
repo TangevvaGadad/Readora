@@ -14,7 +14,7 @@ export default async function Home() {
       title: true,
       author: true,
       pdfUrl: true,
-      coverUrl: true, // ✅ URL from Cloudinary
+      coverUrl: true, 
       createdAt: true,
     },
   });
