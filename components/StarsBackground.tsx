@@ -1,19 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import anime from "animejs";
 
 export default function StarsBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    
+    const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let stars: { x: number; y: number; radius: number; alpha: number }[] = [];
+    let stars: { x: number; y: number; radius: number; alpha: number; speed: number; direction: number }[] = [];
     const numStars = 120;
 
     function initStars() {
@@ -24,30 +22,34 @@ export default function StarsBackground() {
           y: Math.random() * window.innerHeight,
           radius: Math.random() * 2,
           alpha: Math.random(),
+          speed: 0.005 + Math.random() * 0.02, // twinkling speed
+          direction: Math.random() > 0.5 ? 1 : -1, // fade in/out
         });
       }
     }
 
     function drawStars() {
+      if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach((star) => {
+        star.alpha += star.speed * star.direction;
+
+        // reverse direction when hitting alpha bounds
+        if (star.alpha <= 0.1) {
+          star.alpha = 0.1;
+          star.direction = 1;
+        } else if (star.alpha >= 1) {
+          star.alpha = 1;
+          star.direction = -1;
+        }
+
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${star.alpha})`;
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
         ctx.fill();
       });
-    }
 
-    function animateStars() {
-      stars.forEach((star) => {
-        anime({
-          targets: star,
-          alpha: Math.random(),
-          duration: 2000 + Math.random() * 3000,
-          easing: "easeInOutSine",
-          complete: animateStars,
-        });
-      });
+      requestAnimationFrame(drawStars);
     }
 
     function resizeCanvas() {
@@ -55,19 +57,13 @@ export default function StarsBackground() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       initStars();
-      drawStars();
     }
 
     resizeCanvas();
-    animateStars();
+    drawStars();
 
-    const interval = setInterval(drawStars, 50);
     window.addEventListener("resize", resizeCanvas);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("resize", resizeCanvas);
-    };
+    return () => window.removeEventListener("resize", resizeCanvas);
   }, []);
 
   return (

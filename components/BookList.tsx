@@ -25,7 +25,7 @@ export default function BookList({ books }: { books: Book[] }) {
         transition={{ duration: 0.6 }}
         className="text-5xl font-extrabold mb-10 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-300 to-blue-400 drop-shadow-lg"
       >
-        📚 Galaxy of Books
+       Readora
       </motion.h1>
 
       {books.length === 0 ? (
@@ -79,10 +79,7 @@ export default function BookList({ books }: { books: Book[] }) {
               {/* Download Button */}
               <motion.a
                 whileTap={{ scale: 0.95 }}
-                href={book.pdfUrl}
-                download
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`/api/download/${book.id}`}
                 className="inline-block bg-gradient-to-r from-purple-500 to-blue-500 text-white px-5 py-2 rounded-full font-medium shadow hover:from-purple-600 hover:to-blue-600 transition-colors duration-300"
               >
                 📥 Download PDF
