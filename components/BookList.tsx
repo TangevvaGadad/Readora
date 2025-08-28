@@ -79,7 +79,10 @@ export default function BookList({ books }: { books: Book[] }) {
               {/* Download Button */}
               <motion.a
                 whileTap={{ scale: 0.95 }}
-                href={`/api/download/${book.id}`}
+                href={book.pdfUrl}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block bg-gradient-to-r from-purple-500 to-blue-500 text-white px-5 py-2 rounded-full font-medium shadow hover:from-purple-600 hover:to-blue-600 transition-colors duration-300"
               >
                 📥 Download PDF
