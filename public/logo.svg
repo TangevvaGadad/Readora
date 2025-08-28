@@ -1,0 +1,16 @@
+<svg width="220" height="52" viewBox="0 0 220 52" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Readora logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="220" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fca5a5"/>
+      <stop offset="0.45" stop-color="#f0abfc"/>
+      <stop offset="1" stop-color="#93c5fd"/>
+    </linearGradient>
+    <filter id="s" x="-20%" y="-50%" width="140%" height="200%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.45)"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="220" height="52" rx="10" fill="transparent"/>
+  <text x="12" y="36" fill="url(#g)" font-size=" thirty-two" font-size="32" font-weight="800" font-family="Segoe UI, Arial, Helvetica, sans-serif" filter="url(#s)">Readora</text>
+</svg>
+
+
