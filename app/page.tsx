@@ -38,8 +38,8 @@ export default async function Home() {
     <main className="relative min-h-screen w-full overflow-hidden bg-black text-white">
       <PosterWall covers={covers} />
       <StarsBackground />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/60" />
-      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(1200px_800px_at_50%_-10%,rgba(255,255,255,0.08),rgba(0,0,0,0)_60%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/5 to-black/40" />
+      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(1200px_800px_at_50%_-10%,rgba(255,255,255,0.05),rgba(0,0,0,0)_60%)]" />
 
       <div className="flex items-center justify-between px-6 sm:px-10 py-6 relative z-10">
       <div className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rose-300 via-orange-200 to-amber-200 drop-shadow-md [text-shadow:2px_2px_8px_rgba(0,0,0,0.45)]">

@@ -25,8 +25,8 @@ export default function PosterWall({ covers }: { covers: Cover[] }) {
       <motion.div
         className="absolute inset-0"
         style={{ transform: "rotate(-12deg) scale(1.25)" }}
-        animate={{ x: [0, 50, 0], y: [0, -35, 0] }}
-        transition={{ duration: 40, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ x: [0, 80, 0], y: [0, -80, 0] }}
+        transition={{ duration: 45, repeat: Infinity, ease: "easeInOut" }}
       >
         <div
           className="grid gap-3"
@@ -48,7 +48,7 @@ export default function PosterWall({ covers }: { covers: Cover[] }) {
                 className="object-cover"
                 priority={i < 18}
                 unoptimized
-                style={{ opacity: 0.6 }}
+                style={{ opacity: 0.4 }}
               />
             </div>
           ))}
